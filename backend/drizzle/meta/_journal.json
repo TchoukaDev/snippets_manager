@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1770807283580,
+      "tag": "0000_flawless_mantis",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1770822328807,
+      "tag": "0001_add_categories_and_tags",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1770826396480,
+      "tag": "0002_add_cascade_rules",
+      "breakpoints": true
+    }
+  ]
+}

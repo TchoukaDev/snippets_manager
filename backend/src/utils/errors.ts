@@ -1,0 +1,27 @@
+export class AppError extends Error {
+
+    public readonly message: string;
+    public readonly statusCode: number;
+    constructor(message: string, statusCode: number) {
+        super(message);
+        this.message = message;
+        this.statusCode = statusCode;
+    }
+}
+
+export class ValidationError extends AppError {
+    constructor(message: string) {
+        super(message, 400)
+    }
+}
+
+export class NotFoundError extends AppError {
+    constructor(message: string) {
+        super(message, 404)
+    }
+}
+export class DatabaseError extends AppError {
+    constructor(message: string) {
+        super(message, 500)
+    }
+}
