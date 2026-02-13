@@ -1,5 +1,5 @@
 import type { CategoryRepository } from "../repositories/CategoryRepository";
-import { DatabaseError, NotFoundError, ValidationError } from "../utils/errors";
+import { DatabaseError, DuplicateError, NotFoundError, ValidationError } from "../utils/errors";
 import type { Category } from "../types";
 import { normalizeToDb, normalizeToFrontend } from "../utils/NormalizeData";
 
@@ -29,15 +29,25 @@ export class CategoryService {
         if (!name) {
             throw new ValidationError("Un nom est requis")
         }
-        const normalizedName = normalizeToDb(name)
-        const result = await this.categoryRepository.create(normalizedName)
-        if (!result.success) {
-            throw new DatabaseError('Erreur lors de la création de la catégorie')
+
+        try {
+            const normalizedName = normalizeToDb(name)
+            const result = await this.categoryRepository.create(normalizedName)
+            if (!result.success) {
+                throw new DatabaseError('Erreur lors de la création de la catégorie')
+            }
+            const category = await this.getById(result.id)
+            return {
+                ...category,
+                name: normalizeToFrontend(category.name)
+            }
         }
-        const category = await this.getById(result.id)
-        return {
-            ...category,
-            name: normalizeToFrontend(category.name)
+        catch (error: any) {
+
+            if (error.cause.code === 'ER_DUP_ENTRY') {
+                throw new DuplicateError("La catégorie existe déjà")
+            }
+            throw error
         }
     }
 
@@ -47,15 +57,24 @@ export class CategoryService {
         if (!name) {
             throw new ValidationError("Un nom est requis")
         }
-        const normalizedName = normalizeToDb(name)
-        const result = await this.categoryRepository.update(id, normalizedName)
-        if (!result.success) {
-            throw new DatabaseError('Erreur lors de la modification de la catégorie')
+
+        try {
+            const normalizedName = normalizeToDb(name)
+            const result = await this.categoryRepository.update(id, normalizedName)
+            if (!result.success) {
+                throw new DatabaseError('Erreur lors de la modification de la catégorie')
+            }
+            const category = await this.getById(id)
+            return {
+                ...category,
+                name: normalizeToFrontend(category.name)
+            }
         }
-        const category = await this.getById(id)
-        return {
-            ...category,
-            name: normalizeToFrontend(category.name)
+        catch (error: any) {
+            if (error.cause.code === 'ER_DUP_ENTRY') {
+                throw new DuplicateError("La catégorie existe déjà")
+            }
+            throw error
         }
     }
 

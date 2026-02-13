@@ -25,3 +25,9 @@ export class DatabaseError extends AppError {
         super(message, 500)
     }
 }
+export class DuplicateError extends AppError {
+    constructor(message: string) {
+        super(message, 409)
+    }
+}
+

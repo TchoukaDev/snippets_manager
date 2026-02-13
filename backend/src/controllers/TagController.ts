@@ -44,6 +44,7 @@ export class TagController {
         try {
             const id = Number(req.params.id)
             await this.tagService.delete(id)
+            res.status(204).send()
         } catch (error) {
             next(error)
         }

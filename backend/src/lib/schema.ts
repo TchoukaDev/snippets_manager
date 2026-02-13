@@ -1,26 +1,26 @@
 import { relations } from "drizzle-orm";
-import { int, mysqlTable, primaryKey, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { index, int, mysqlTable, primaryKey, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 
 
 // Tables
 export const snippets = mysqlTable("snippets", {
     id: int('id').primaryKey().autoincrement(),
-    title: varchar('title', { length: 255 }).notNull(),
+    title: varchar('title', { length: 255 }).unique().notNull(),
     format: varchar('format', { length: 20 }).notNull(),
     content: text('content').notNull(),
     categoryId: int('category_id').references(() => categories.id, { onDelete: 'set null' }),
     createdAt: timestamp('created_at').defaultNow()
-})
+}, (table) => ({ formatIndex: index('format_index').on(table.format) }))
 
 export const categories = mysqlTable("category", {
     id: int('id').primaryKey().autoincrement(),
-    name: varchar('name', { length: 50 }).notNull(),
+    name: varchar('name', { length: 50 }).unique().notNull(),
 })
 
 export const tags = mysqlTable("tags", {
     id: int('id').primaryKey().autoincrement(),
-    name: varchar('name', { length: 50 }).notNull()
+    name: varchar('name', { length: 50 }).unique().notNull()
 })
 
 export const snippetTags = mysqlTable("snippet_tags", {
