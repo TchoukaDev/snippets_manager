@@ -1,6 +1,6 @@
 
 import { SnippetRepository } from "../repositories/SnippetRepository";
-import { DatabaseError, NotFoundError, ValidationError } from "../utils/errors";
+import { DatabaseError, DuplicateError, NotFoundError, ValidationError } from "../utils/errors";
 import type { TagService } from "./TagService";
 import type { Snippet } from "../types";
 import { normalizeToDb, normalizeToFrontend } from "../utils/NormalizeData";
@@ -42,17 +42,24 @@ export class SnippetService {
         if (!categoryId) {
             throw new ValidationError("Une catégorie est requise")
         }
+        try {
+            const normalizedTitle = normalizeToDb(title)
 
-        const normalizedTitle = normalizeToDb(title)
-
-        const result = await this.snippetRepository.create(normalizedTitle, content, format, categoryId);
-        if (!result.success) {
-            throw new DatabaseError("Erreur lors de la création du snippet")
+            const result = await this.snippetRepository.create(normalizedTitle, content, format, categoryId);
+            if (!result.success) {
+                throw new DatabaseError("Erreur lors de la création du snippet")
+            }
+            const snippet = await this.getById(result.id)
+            return {
+                ...snippet,
+                title: normalizeToFrontend(snippet.title),
+            }
         }
-        const snippet = await this.getById(result.id)
-        return {
-            ...snippet,
-            title: normalizeToFrontend(snippet.title),
+        catch (error: any) {
+            if (error.cause?.code === 'ER_DUP_ENTRY') {
+                throw new DuplicateError("Un snippet avec ce titre existe déjà")
+            }
+            throw error
         }
     }
 
@@ -73,16 +80,24 @@ export class SnippetService {
             throw new ValidationError("Une catégorie est requise")
         }
 
-        const normalizedTitle = normalizeToDb(title)
-        const result = await this.snippetRepository.update(id, normalizedTitle, content, format, categoryId)
+        try {
+            const normalizedTitle = normalizeToDb(title)
+            const result = await this.snippetRepository.update(id, normalizedTitle, content, format, categoryId)
 
-        if (!result.success) {
-            throw new DatabaseError("Erreur lors de la modification du snippet")
+            if (!result.success) {
+                throw new DatabaseError("Erreur lors de la modification du snippet")
+            }
+            const snippet = await this.getById(id)
+            return {
+                ...snippet,
+                title: normalizeToFrontend(snippet.title),
+            }
         }
-        const snippet = await this.getById(id)
-        return {
-            ...snippet,
-            title: normalizeToFrontend(snippet.title),
+        catch (error: any) {
+            if (error.cause?.code === 'ER_DUP_ENTRY') {
+                throw new DuplicateError("Un snippet avec ce titre existe déjà")
+            }
+            throw error
         }
     }
 

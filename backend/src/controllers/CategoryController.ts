@@ -44,7 +44,7 @@ export class CategoryController {
         try {
             const id = Number(req.params.id)
             await this.categoryService.delete(id)
-
+            res.status(204).send()
         } catch (error) {
             next(error)
         }

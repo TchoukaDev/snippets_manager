@@ -1,6 +1,6 @@
 import type { TagRepository } from "../repositories/TagRepository";
 import { Tag } from "../types";
-import { DatabaseError, NotFoundError, ValidationError } from "../utils/errors";
+import { DatabaseError, DuplicateError, NotFoundError, ValidationError } from "../utils/errors";
 import { normalizeToDb, normalizeToFrontend } from "../utils/NormalizeData";
 
 export class TagService {
@@ -27,15 +27,23 @@ export class TagService {
         if (!name) {
             throw new ValidationError("Un nom est requis")
         }
-        const normalizedName = normalizeToDb(name)
-        const result = await this.tagRepository.create(normalizedName)
-        if (!result.success) {
-            throw new DatabaseError("Erreur lors de la création du tag")
+        try {
+            const normalizedName = normalizeToDb(name)
+            const result = await this.tagRepository.create(normalizedName)
+            if (!result.success) {
+                throw new DatabaseError("Erreur lors de la création du tag")
+            }
+            const tag = await this.getById(result.id)
+            return {
+                ...tag,
+                name: normalizeToFrontend(tag.name)
+            }
         }
-        const tag = await this.getById(result.id)
-        return {
-            ...tag,
-            name: normalizeToFrontend(tag.name)
+        catch (error: any) {
+            if (error.cause?.code === 'ER_DUP_ENTRY') {
+                throw new DuplicateError("Un tag avec ce nom existe déjà")
+            }
+            throw error
         }
     }
 
@@ -45,16 +53,24 @@ export class TagService {
             throw new ValidationError("Un nom est requis")
         }
 
-        const normalizedName = normalizeToDb(name)
-        const result = await this.tagRepository.update(id, normalizedName)
-        if (!result.success) {
-            throw new DatabaseError("Erreur lors de la modification du tag")
-        }
+        try {
+            const normalizedName = normalizeToDb(name)
+            const result = await this.tagRepository.update(id, normalizedName)
+            if (!result.success) {
+                throw new DatabaseError("Erreur lors de la modification du tag")
+            }
 
-        const tag = await this.getById(id)
-        return {
-            ...tag,
-            name: normalizeToFrontend(tag.name)
+            const tag = await this.getById(id)
+            return {
+                ...tag,
+                name: normalizeToFrontend(tag.name)
+            }
+        }
+        catch (error: any) {
+            if (error.cause?.code === 'ER_DUP_ENTRY') {
+                throw new DuplicateError("Un tag avec ce nom existe déjà")
+            }
+            throw error
         }
     }
 
