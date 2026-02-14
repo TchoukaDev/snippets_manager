@@ -7,7 +7,7 @@ import type { Category } from '@shared/types';
 export function SnippetForm() {
     const [file, setFile] = useState<File | null>(null);
     const [categoryId, setCategoryId] = useState<number | null>(null);
-    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+    const [isCategoryModalOpen, setIsCategoryModalOpen] = useState<boolean>(false);
 
     const createSnippet = useCreateSnippet();
     const { data: categories = [] } = useCategories();
@@ -17,7 +17,7 @@ export function SnippetForm() {
         if (!file) return;
 
         const title = file.name;
-        const format = title.split('.').pop() || '';
+        const format = title.split('.').pop()?.toLowerCase() || '';
         const content = await file.text();
 
         createSnippet.mutate(

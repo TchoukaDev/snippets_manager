@@ -12,6 +12,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.90.21",
     "@types/react-syntax-highlighter": "^15.5.13",
+    "lucide-react": "^0.564.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-markdown": "^10.1.0",

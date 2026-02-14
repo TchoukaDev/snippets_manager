@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useCategories } from '../hooks/useCategories';
+import { useCreateCategory } from '../hooks/useCategories';
+import { createPortal } from 'react-dom';
 
 interface CategoryModalProps {
     isOpen: boolean;
@@ -8,7 +9,7 @@ interface CategoryModalProps {
 
 export function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
     const [name, setName] = useState('');
-    const { createCategory } = useCategories();
+    const createCategory = useCreateCategory();
 
     if (!isOpen) return null;
 
@@ -27,7 +28,7 @@ export function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
         );
     };
 
-    return (
+    return createPortal(
         <div className="modal-overlay" onClick={onClose}>
             <div className="modal" onClick={(e) => e.stopPropagation()}>
                 <h2>Nouvelle catégorie</h2>
@@ -55,6 +56,7 @@ export function CategoryModal({ isOpen, onClose }: CategoryModalProps) {
                     )}
                 </form>
             </div>
-        </div>
+        </div>,
+        document.getElementById('modal-root') as HTMLDivElement
     );
 }
