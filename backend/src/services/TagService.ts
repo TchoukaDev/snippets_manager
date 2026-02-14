@@ -1,7 +1,6 @@
 import type { TagRepository } from "../repositories/TagRepository";
 import { Tag } from "../types";
 import { DatabaseError, DuplicateError, NotFoundError, ValidationError } from "../utils/errors";
-import { DatabaseError, DuplicateError, NotFoundError, ValidationError } from "../utils/errors";
 import { normalizeToDb, normalizeToFrontend } from "../utils/NormalizeData";
 
 export class TagService {
@@ -54,38 +53,33 @@ export class TagService {
             throw new ValidationError("Un nom est requis")
         }
 
+
         try {
             const normalizedName = normalizeToDb(name)
             const result = await this.tagRepository.update(id, normalizedName)
             if (!result.success) {
                 throw new DatabaseError("Erreur lors de la modification du tag")
             }
-            try {
-                const normalizedName = normalizeToDb(name)
-                const result = await this.tagRepository.update(id, normalizedName)
-                if (!result.success) {
-                    throw new DatabaseError("Erreur lors de la modification du tag")
-                }
 
-                const tag = await this.getById(id)
-                return {
-                    ...tag,
-                    name: normalizeToFrontend(tag.name)
-                }
-            }
-            catch (error: any) {
-                if (error.cause?.code === 'ER_DUP_ENTRY') {
-                    throw new DuplicateError("Un tag avec ce nom existe déjà")
-                }
-                throw error
+            const tag = await this.getById(id)
+            return {
+                ...tag,
+                name: normalizeToFrontend(tag.name)
             }
         }
+        catch (error: any) {
+            if (error.cause?.code === 'ER_DUP_ENTRY') {
+                throw new DuplicateError("Un tag avec ce nom existe déjà")
+            }
+            throw error
+        }
+    }
 
-    async delete (id: number): Promise < void> {
-            await this.getById(id)
+    async delete(id: number): Promise<void> {
+        await this.getById(id)
 
         const result = await this.tagRepository.delete(id)
-        if(!result.success) {
+        if (!result.success) {
             throw new DatabaseError("Erreur lors de la suppression du tag")
         }
     }
