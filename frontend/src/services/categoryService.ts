@@ -18,4 +18,21 @@ export const categoryService = {
         if (!res.ok) throw new Error('Erreur création catégorie');
         return res.json();
     },
+
+    deleteCategory: async (categoryId: number): Promise<void> => {
+        const res = await fetch(`${API_URL}/categories/${categoryId}`, {
+            method: 'DELETE',
+        });
+        if (!res.ok) throw new Error('Erreur suppression catégorie');
+    },
+
+    updateCategory: async (categoryId: number, name: string): Promise<Category> => {
+        const res = await fetch(`${API_URL}/categories/${categoryId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name }),
+        });
+        if (!res.ok) throw new Error('Erreur modification catégorie');
+        return res.json();
+    },
 }
