@@ -8,8 +8,14 @@ export type NewCategory = typeof categories.$inferInsert
 export type Tag = typeof tags.$inferSelect
 export type NewTag = typeof tags.$inferInsert
 
-export type Snippet = typeof snippets.$inferSelect
+export type SelectedSnippet = typeof snippets.$inferSelect
+// Type avec jointures (ce que tu renvoies au front)
+export type Snippet = Omit<SelectedSnippet, 'categoryId'> & {
+    category: Category | null
+}
+
 export type NewSnippet = typeof snippets.$inferInsert
+
 
 export type SnippetTag = typeof snippetTags.$inferSelect
 export type NewSnippetTag = typeof snippetTags.$inferInsert

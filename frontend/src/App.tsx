@@ -1,17 +1,15 @@
 import { useState } from 'react';
 import { SnippetList } from './components/SnippetList';
 import { SnippetCard } from './components/SnippetCard';
-import type { Snippet } from '@shared/types';
 import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card';
 import { Button } from './components/ui/button';
 import { AddFileModal } from './components/Modals/AddFileModal';
 import { ManageCategoriesModal } from './components/Modals/ManageCategoriesModal';
+import { SnippetProvider, useSnippetContext } from './contexts/SnippetContext';
 
-function App() {
-
-  const [currentSnippet, setCurrentSnippet] = useState<Snippet | null>(null);
+function AppContent() {
+  const { currentSnippet } = useSnippetContext();
   const [isOpen, setIsOpen] = useState<Record<string, boolean> | null>(null);
-
 
   const handleOpenModal = (modal: string) => {
     setIsOpen({ ...isOpen, [modal]: true });
@@ -28,7 +26,7 @@ function App() {
         <h1 className="text-2xl font-bold mb-6 border-b border-sidebar-border pb-6">Snippets Manager</h1>
         <nav className="space-y-4">
           <h2 className="font-semibold text-center text-accent-foreground mb-6">Liste des snippets</h2>
-          <SnippetList onSelectSnippet={setCurrentSnippet} />
+          <SnippetList />
         </nav>
       </aside>
       {/* Main content */}
@@ -38,7 +36,7 @@ function App() {
           <Button onClick={() => handleOpenModal('manageCategories')}>Gérer les catégories</Button>
         </div>
 
-        {currentSnippet ? <SnippetCard snippet={currentSnippet} /> : <Card><CardHeader><CardTitle className='text-center'>Aucun snippet sélectionné</CardTitle></CardHeader>
+        {currentSnippet ? <SnippetCard key={currentSnippet.id} /> : <Card><CardHeader><CardTitle className='text-center'>Aucun snippet sélectionné</CardTitle></CardHeader>
           <CardContent><p className='text-center'>Veuillez sélectionner un snippet pour l'afficher ici</p></CardContent>
         </Card>}
 
@@ -47,6 +45,14 @@ function App() {
       <AddFileModal isOpen={isOpen?.addFile ?? false} onClose={() => handleCloseModal('addFile')} />
       <ManageCategoriesModal isOpen={isOpen?.manageCategories ?? false} onClose={() => handleCloseModal('manageCategories')} />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <SnippetProvider>
+      <AppContent />
+    </SnippetProvider>
   );
 }
 

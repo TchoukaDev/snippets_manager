@@ -1,25 +1,18 @@
 import type { Snippet } from '@shared/types';
-import { useSnippets } from '../hooks/useSnippets';
+import { useSnippetContext } from '../contexts/SnippetContext';
 import { Button } from './ui/button';
 
-interface SnippetListProps {
-    onSelectSnippet: (snippet: Snippet) => void;
-}
-
-export function SnippetList({ onSelectSnippet }: SnippetListProps) {
-    const { data: snippets = [], isLoading, isError, error } = useSnippets();
+export function SnippetList() {
+    const { snippets, isLoading, isError, error, setCurrentSnippetId } = useSnippetContext();
 
     if (isLoading) return <p>Chargement...</p>;
-    if (isError) return <p>Erreur : {error.message}</p>;
+    if (isError) return <p>Erreur : {error?.message}</p>;
 
     return (
         <div className="space-y-4">
-
-
             {snippets.map((snippet: Snippet) => (
-                <Button variant="ghost" className="text-muted-foreground" key={snippet.id} onClick={() => onSelectSnippet(snippet)}>{snippet.title}</Button>
+                <Button variant="ghost" className="text-muted-foreground" key={snippet.id} onClick={() => setCurrentSnippetId(snippet.id)}>{snippet.title}</Button>
             ))}
-
         </div>
     );
 }

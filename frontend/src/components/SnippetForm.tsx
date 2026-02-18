@@ -1,13 +1,12 @@
 import { useState } from 'react';
 import { useCreateSnippet } from '../hooks/useSnippets';
-import { useCategories } from '../hooks/useCategories';
 import { NewCategoryModal } from './Modals/NewCategoryModal';
-import type { Category } from '@shared/types';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from './ui/select';
 import InputFileDemo from './ui/inputFile';
 import { Field, FieldLabel } from './ui/field';
+import { CategorySelector } from './CategorySelector';
+import { NewCategoryButton } from './ui/NewCategoryButton';
 
 export function SnippetForm() {
     const [file, setFile] = useState<File | null>(null);
@@ -16,7 +15,6 @@ export function SnippetForm() {
     const [error, setError] = useState<string | null>(null);
     const [title, setTitle] = useState<string>('');
     const createSnippet = useCreateSnippet();
-    const { data: categories = [] } = useCategories();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -70,36 +68,9 @@ export function SnippetForm() {
                                 <Input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Nom" />
                             </Field>
                             <div className='flex gap-4'>
-                                <Select
-                                    value={categoryId?.toString() ?? undefined}
-                                    onValueChange={(value) =>
-                                        setCategoryId(value ? Number(value) : null)
-                                    }
-                                >
-                                    <SelectTrigger className='flex-1'> <SelectValue
-                                        placeholder="Sélectionnez une catégorie"
-                                    /></SelectTrigger>
-                                    <SelectContent  >
-                                        <SelectGroup>
-                                            <SelectLabel>Catégories</SelectLabel>
-                                            {categories?.map((c: Category) => (
-                                                <SelectItem key={c.id} value={c.id.toString()}>
-                                                    {c.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
-
-                                <Button
-                                    type="button"
-                                    title='Ajouter une catégorie'
-                                    aria-label='Ajouter une catégorie'
-                                    className="btn-add-category"
-                                    onClick={() => setIsCategoryModalOpen(true)}
-                                >
-                                    +
-                                </Button> </div>
+                                <CategorySelector className='flex-1' categoryId={categoryId} setCategoryId={(categoryId) => setCategoryId(categoryId)} />
+                                <NewCategoryButton handleOpenModal={() => setIsCategoryModalOpen(true)} />
+                            </div>
 
 
                             {error && (

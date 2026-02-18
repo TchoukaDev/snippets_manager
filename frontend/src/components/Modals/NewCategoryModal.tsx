@@ -73,9 +73,7 @@ export function NewCategoryModal({ isOpen, onClose }: CategoryModalProps) {
                         </Button>
                     </DialogFooter>
 
-                    {createCategory.isError && (
-                        <p className="error">{createCategory.error.message}</p>
-                    )}
+
                 </form>
 
             </DialogContent>

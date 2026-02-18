@@ -21,6 +21,16 @@ export const snippetService = {
         return data;
     },
 
+    updateSnippet: async (id: number, title: string, content: string, format: string, categoryId: number): Promise<Snippet> => {
+        const res = await fetch(`${API_URL}/snippets/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id, title, content, format, categoryId }),
+        });
+        if (!res.ok) throw new Error('Erreur mise à jour snippet');
+        return res.json();
+    },
+
     deleteSnippet: async (id: number): Promise<void> => {
         const res = await fetch(`${API_URL}/snippets/${id}`, {
             method: 'DELETE',

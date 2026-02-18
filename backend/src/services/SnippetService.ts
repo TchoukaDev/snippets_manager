@@ -13,8 +13,11 @@ export class SnippetService {
         return snippets.map(snippet => ({
             ...snippet,
             title: normalizeToFrontend(snippet.title),
+            category: snippet.category ? {
+                ...snippet.category,
+                name: normalizeToFrontend(snippet.category.name)
+            } : null
         }))
-
     }
 
     async getById(id: number): Promise<Snippet> {
@@ -24,6 +27,10 @@ export class SnippetService {
         } else return {
             ...snippet,
             title: normalizeToFrontend(snippet.title),
+            category: snippet.category ? {
+                ...snippet.category,
+                name: normalizeToFrontend(snippet.category.name)
+            } : null
         }
     }
 
@@ -54,6 +61,10 @@ export class SnippetService {
             return {
                 ...snippet,
                 title: normalizeToFrontend(snippet.title),
+                category: snippet.category ? {
+                    ...snippet.category,
+                    name: normalizeToFrontend(snippet.category.name)
+                } : null
             }
         }
         catch (error: any) {
@@ -91,6 +102,10 @@ export class SnippetService {
             return {
                 ...snippet,
                 title: normalizeToFrontend(snippet.title),
+                category: snippet.category ? {
+                    ...snippet.category,
+                    name: normalizeToFrontend(snippet.category.name)
+                } : null
             }
         }
         catch (error: any) {

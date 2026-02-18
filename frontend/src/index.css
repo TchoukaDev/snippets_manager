@@ -124,10 +124,25 @@
     @apply bg-background text-foreground;
     @apply bg-background text-foreground;
   }
+
+
 }
 
 @layer components {
   .error {
     @apply text-red-500 text-sm text-center;
   }
+
+  .codeBlock h1 {
+    @apply text-2xl font-bold my-4;
+  }
+
+  .codeBlock h2 {
+    @apply text-xl font-semibold my-3;
+  }
+
+  .codeBlock h3 {
+    @apply text-lg font-semibold my-3;
+  }
+
 }

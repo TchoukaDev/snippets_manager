@@ -1,36 +1,23 @@
-import type { Snippet } from '@shared/types';
-import { CodeBlock } from './CodeBlock';
-import { Trash2 } from 'lucide-react';
-import { useDeleteSnippet } from '../hooks/useSnippets';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
+import { useState } from 'react';
+import { useSnippetContext } from '../contexts/SnippetContext';
+import { SnippetCardView } from './SnippetCardView';
+import { SnippetCardEdit } from './SnippetCardEdit';
 
-interface SnippetCardProps {
-    snippet: Snippet;
-}
+export function SnippetCard() {
+    const { currentSnippet: snippet } = useSnippetContext();
+    const [isEditing, setIsEditing] = useState(false);
 
-export function SnippetCard({ snippet }: SnippetCardProps) {
-    const deleteSnippet = useDeleteSnippet();
+    if (!snippet) return null;
 
-    const formats = {
-        'md': 'Markdown',
+    if (isEditing) {
+        return (
+            <SnippetCardEdit
+                snippet={snippet}
+                onCancel={() => setIsEditing(false)}
+                onSaved={() => setIsEditing(false)}
+            />
+        );
     }
 
-    return (
-        <Card>
-            <CardHeader className="relative">
-                {/* Actions */}
-                <Button variant="destructive" size="icon-lg" onClick={() => deleteSnippet.mutate(snippet.id)} className='absolute right-5 top-0'><Trash2 className='size-5'></Trash2>
-                </Button>
-                {/* Title */}
-                <CardTitle className='text-lg font-bold text-center'>{snippet.title}</CardTitle>
-                {/* Format */}
-                <span className="text-muted-foreground text-center">Fichier {formats[snippet.format as keyof typeof formats]}</span>
-            </CardHeader>
-            <CardContent>
-                {/* Content */}
-                <CodeBlock content={snippet.content} />
-            </CardContent>
-        </Card>
-    );
+    return <SnippetCardView snippet={snippet} onEdit={() => setIsEditing(true)} />;
 }

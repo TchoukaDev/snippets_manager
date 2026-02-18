@@ -1,14 +1,42 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "../lib/db";
-import { snippets, snippetTags } from "../lib/schema";
+import { snippets, snippetTags, categories } from "../lib/schema";
 import { DeleteResult, InsertResult, Snippet, UpdateResult } from "../types";
 
 
 export class SnippetRepository {
-    async findAll(): Promise<Snippet[]> { return db.select().from(snippets) }
+    async findAll(): Promise<Snippet[]> {
 
-    async findById(id: number) {
-        const [result] = await db.select().from(snippets).where(eq(snippets.id, id))
+        const result = await db.select({
+            id: snippets.id,
+            title: snippets.title,
+            content: snippets.content,
+            format: snippets.format,
+            createdAt: snippets.createdAt,
+            category: {
+                id: categories.id,
+                name: categories.name
+            }
+
+        }).from(snippets).leftJoin(categories, eq(snippets.categoryId, categories.id))
+
+        return result.map(row => ({
+            ...row, category: row.category?.id ? row.category : null
+        }))
+    }
+
+    async findById(id: number): Promise<Snippet | null> {
+        const [result] = await db.select({
+            id: snippets.id,
+            title: snippets.title,
+            content: snippets.content,
+            format: snippets.format,
+            createdAt: snippets.createdAt,
+            category: {
+                id: categories.id,
+                name: categories.name
+            }
+        }).from(snippets).leftJoin(categories, eq(snippets.categoryId, categories.id)).where(eq(snippets.id, id))
         return result ?? null
     }
 
