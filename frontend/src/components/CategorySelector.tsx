@@ -4,25 +4,28 @@ import type { Category } from "@shared/types";
 
 interface CategorySelectorProps {
     categoryId: number | null;
-    setCategoryId: (categoryId: number | null) => void;
+    setCategoryId: (categoryId: number | "all" | null) => void
     className?: string;
+    nullable?: boolean; //Pour le sélecteur global
 }
 
-export function CategorySelector({ categoryId, setCategoryId, className }: CategorySelectorProps) {
+export function CategorySelector({ categoryId, setCategoryId, className, nullable = false }: CategorySelectorProps) {
     const { data: categories = [] } = useCategories();
+
+
     return (
         <Select
             value={categoryId?.toString() ?? undefined}
             onValueChange={(value) =>
-                setCategoryId(value ? Number(value) : null)
+                setCategoryId(value === "all" ? "all" : value ? Number(value) : null)
             }
         >
             <SelectTrigger className={className}> <SelectValue
                 placeholder="Sélectionnez une catégorie"
             /></SelectTrigger>
-            <SelectContent  >
+            <SelectContent position={nullable ? "popper" : "item-aligned"}>
                 <SelectGroup>
-                    <SelectLabel>Catégories</SelectLabel>
+                    {nullable && <SelectItem value="all">Toutes les catégories</SelectItem>}
                     {categories?.map((c: Category) => (
                         <SelectItem key={c.id} value={c.id.toString()}>
                             {c.name}

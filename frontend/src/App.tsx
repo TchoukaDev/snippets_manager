@@ -6,6 +6,8 @@ import { Button } from './components/ui/button';
 import { AddFileModal } from './components/Modals/AddFileModal';
 import { ManageCategoriesModal } from './components/Modals/ManageCategoriesModal';
 import { SnippetProvider, useSnippetContext } from './contexts/SnippetContext';
+import { SearchSnippet } from './components/SearchSnippet';
+import { CategorySelectorWrapper } from './components/CategorySelectorWrapper';
 
 function AppContent() {
   const { currentSnippet } = useSnippetContext();
@@ -34,6 +36,8 @@ function AppContent() {
         <div className="flex gap-4">
           <Button onClick={() => handleOpenModal('addFile')}>+ Ajouter un snippet</Button>
           <Button onClick={() => handleOpenModal('manageCategories')}>Gérer les catégories</Button>
+          <SearchSnippet />
+          <CategorySelectorWrapper />
         </div>
 
         {currentSnippet ? <SnippetCard key={currentSnippet.id} /> : <Card><CardHeader><CardTitle className='text-center'>Aucun snippet sélectionné</CardTitle></CardHeader>

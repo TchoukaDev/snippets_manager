@@ -8,11 +8,21 @@ export function SnippetList() {
     if (isLoading) return <p>Chargement...</p>;
     if (isError) return <p>Erreur : {error?.message}</p>;
 
+    // Récupérer les catégories sans doublons pour afficher les snippets par catégorie
+    const categoriesSet = [...new Set(snippets.map((snippet: Snippet) => snippet.category?.name))];
+
+
     return (
-        <div className="space-y-4">
-            {snippets.map((snippet: Snippet) => (
-                <Button variant="ghost" className="text-muted-foreground" key={snippet.id} onClick={() => setCurrentSnippetId(snippet.id)}>{snippet.title}</Button>
+        <ul className="list-none space-y-4">
+            {categoriesSet.map((category: string | undefined) => category && (<li key={category}>
+                <h2 className="mb-2 ">{category}</h2>
+                {snippets.filter((snippet: Snippet) => snippet.category?.name === category).map((snippet: Snippet) => (<li key={snippet.id}>
+                    <Button variant="ghost" className="text-muted-foreground" onClick={() => setCurrentSnippetId(snippet.id)}>{snippet.title}</Button>
+                </li>
+                ))}
+            </li>
             ))}
-        </div>
+
+        </ul>
     );
 }
