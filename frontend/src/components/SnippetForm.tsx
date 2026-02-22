@@ -68,7 +68,7 @@ export function SnippetForm() {
                                 <Input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Nom" />
                             </Field>
                             <div className='flex gap-4'>
-                                <CategorySelector className='flex-1' categoryId={categoryId} setCategoryId={(categoryId) => setCategoryId(categoryId)} />
+                                <CategorySelector className='flex-1' categoryId={categoryId} setCategoryId={(categoryId) => setCategoryId(Number(categoryId) || null)} />
                                 <NewCategoryButton handleOpenModal={() => setIsCategoryModalOpen(true)} />
                             </div>
 

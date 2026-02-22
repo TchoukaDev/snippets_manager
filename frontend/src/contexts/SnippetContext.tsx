@@ -11,7 +11,7 @@ interface SnippetContextType {
     error: Error | null;
     search: string;
     setSearch: (search: string) => void;
-    currentCategoryId: number | "all" | null;
+    currentCategoryId: number | null;
     setCurrentCategoryId: (categoryId: number | null) => void;
 }
 
@@ -21,14 +21,14 @@ export function SnippetProvider({ children }: { children: ReactNode }) {
     const [currentSnippetId, setCurrentSnippetId] = useState<number | null>(null);
     const { data: snippets = [], isLoading, isError, error } = useSnippets();
     const [search, setSearch] = useState('');
-    const [currentCategoryId, setCurrentCategoryId] = useState<number | "all" | null>(null);
+    const [currentCategoryId, setCurrentCategoryId] = useState<number | null>(null);
     // Dérivé directement du cache React Query → toujours à jour après mutation optimiste
     const currentSnippet = snippets.find((s) => s.id === currentSnippetId) ?? null;
 
 
     // Filtrer les snippets par catégorie
-    const filterSnippetsByCategory = useCallback((snippets: Snippet[], categoryId: number | "all" | null) => {
-        if (!categoryId || categoryId === "all") return snippets
+    const filterSnippetsByCategory = useCallback((snippets: Snippet[], categoryId: number | null) => {
+        if (!categoryId) return snippets;
         return snippets.filter((s) => s.category?.id === categoryId);
     }, []);
 
