@@ -1,10 +1,12 @@
 import { createContext, useCallback, useContext, useState, type ReactNode } from 'react';
-import type { Snippet } from '@shared/types';
+import type { Snippet, Tag } from '@shared/types';
 import { useSnippets } from '../hooks/useSnippets';
 
 interface SnippetContextType {
     currentSnippet: Snippet | null;
     setCurrentSnippetId: (id: number | null) => void;
+    currentTagIds: number[];
+    setCurrentTagIds: (tagIds: number[]) => void;
     snippets: Snippet[];
     isLoading: boolean;
     isError: boolean;
@@ -22,6 +24,7 @@ export function SnippetProvider({ children }: { children: ReactNode }) {
     const { data: snippets = [], isLoading, isError, error } = useSnippets();
     const [search, setSearch] = useState('');
     const [currentCategoryId, setCurrentCategoryId] = useState<number | null>(null);
+    const [currentTagIds, setCurrentTagIds] = useState<number[]>([]);
     // Dérivé directement du cache React Query → toujours à jour après mutation optimiste
     const currentSnippet = snippets.find((s) => s.id === currentSnippetId) ?? null;
 
@@ -32,6 +35,12 @@ export function SnippetProvider({ children }: { children: ReactNode }) {
         return snippets.filter((s) => s.category?.id === categoryId);
     }, []);
 
+    // Filtrer les snippets par tags
+    const filterSnippetsByTags = useCallback((snippets: Snippet[], tagIds: number[]) => {
+        if (tagIds.length === 0) return snippets;
+        return snippets.filter((s) => s.tags.some((t: Tag) => tagIds.includes(t.id)));
+    }, []);
+
     // Filtrer les snippets par recherche après le filtrage par catégorie
     const searchSnippets = useCallback((snippets: Snippet[], search: string) => {
         if (!search) return snippets
@@ -40,8 +49,9 @@ export function SnippetProvider({ children }: { children: ReactNode }) {
 
 
 
-    const filteredSnippets = filterSnippetsByCategory(snippets, currentCategoryId);
-    const searchedSnippets = searchSnippets(filteredSnippets, search);
+    const filteredSnippetsByCategory = filterSnippetsByCategory(snippets, currentCategoryId);
+    const filteredSnippetsByTags = filterSnippetsByTags(filteredSnippetsByCategory, currentTagIds);
+    const searchedSnippets = searchSnippets(filteredSnippetsByTags, search);
 
 
 
@@ -57,6 +67,8 @@ export function SnippetProvider({ children }: { children: ReactNode }) {
             setSearch,
             currentCategoryId,
             setCurrentCategoryId,
+            currentTagIds,
+            setCurrentTagIds,
         }}>
             {children}
         </SnippetContext.Provider>

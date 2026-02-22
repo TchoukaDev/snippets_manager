@@ -1,6 +1,6 @@
-import type { NewSnippet, Snippet } from "@shared/types";
+import type { NewSnippetWithTags, Snippet } from "@shared/types";
 
-const API_URL = 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const snippetService = {
     // Snippets
@@ -10,7 +10,7 @@ export const snippetService = {
         return res.json();
     },
 
-    createSnippet: async (snippet: NewSnippet): Promise<Snippet> => {
+    createSnippet: async (snippet: NewSnippetWithTags): Promise<Snippet> => {
         const res = await fetch(`${API_URL}/snippets`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -21,11 +21,11 @@ export const snippetService = {
         return data;
     },
 
-    updateSnippet: async (id: number, title: string, content: string, format: string, categoryId: number): Promise<Snippet> => {
-        const res = await fetch(`${API_URL}/snippets/${id}`, {
+    updateSnippet: async (snippet: NewSnippetWithTags): Promise<Snippet> => {
+        const res = await fetch(`${API_URL}/snippets/${snippet.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ id, title, content, format, categoryId }),
+            body: JSON.stringify(snippet),
         });
         if (!res.ok) throw new Error('Erreur mise à jour snippet');
         return res.json();

@@ -1,5 +1,5 @@
-import { Select, SelectValue, SelectTrigger, SelectGroup, SelectItem, SelectContent } from "./ui/select";
-import { useCategories } from "../hooks/useCategories";
+import { Select, SelectValue, SelectTrigger, SelectGroup, SelectItem, SelectContent } from "../ui/select";
+import { useCategories } from "../../hooks/useCategories";
 import type { Category } from "@shared/types";
 
 interface CategorySelectorProps {

@@ -1,10 +1,10 @@
 import type { Snippet } from '@shared/types';
-import { CodeBlock } from './CodeBlock';
+import { CodeBlock } from '../CodeBlock/CodeBlock';
 import { Pencil, Trash2 } from 'lucide-react';
-import { useDeleteSnippet } from '../hooks/useSnippets';
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
+import { useDeleteSnippet } from '../../hooks/useSnippets';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
 
 const formats: Record<string, string> = {
     'md': 'Markdown',
@@ -31,6 +31,7 @@ export function SnippetCardView({ snippet, onEdit }: SnippetCardViewProps) {
                 {/* Format */}
                 <span className="text-muted-foreground text-center">Fichier {formats[snippet.format] ?? snippet.format}</span>
                 {snippet.category && <Badge className='mx-auto mt-2'>{snippet.category.name}</Badge>}
+                {snippet.tags.length > 0 && <div className='flex gap-2 justify-center mt-2'>{snippet.tags.map(tag => <Badge key={tag.id} variant="secondary">{tag.name}</Badge>)}</div>}
             </CardHeader>
             <CardContent>
                 {/* Content */}

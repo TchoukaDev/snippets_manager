@@ -1,4 +1,3 @@
-
 import type { NextFunction, Request, Response } from "express"
 import type { SnippetService } from "../services/SnippetService"
 
@@ -27,8 +26,8 @@ export class SnippetController {
 
     create = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { title, content, format, categoryId } = req.body
-            const snippet = await this.snippetService.create(title, content, format, categoryId)
+            const { title, content, format, categoryId, tagIds } = req.body
+            const snippet = await this.snippetService.create(title, content, format, categoryId, tagIds ?? [])
             res.status(201).json(snippet)
         } catch (error) {
             next(error)
@@ -37,13 +36,15 @@ export class SnippetController {
 
     update = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { id, title, content, format, categoryId } = req.body
-            const snippet = await this.snippetService.update(id, title, content, format, categoryId)
+            const id = Number(req.params.id)
+            const { title, content, format, categoryId, tagIds } = req.body
+            const snippet = await this.snippetService.update(id, title, content, format, categoryId, tagIds ?? [])
             res.json(snippet)
         } catch (error) {
             next(error)
         }
     }
+
     delete = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const id = Number(req.params.id)
@@ -54,29 +55,4 @@ export class SnippetController {
             next(error)
         }
     }
-
-    addTag = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const snippetId = Number(req.params.id)
-            const { tagId } = req.body
-            const result = await this.snippetService.addTag(snippetId, tagId)
-            res.status(201).json(result)
-        } catch (error) {
-            next(error)
-        }
-    }
-
-    removeTag = async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const snippetId = Number(req.params.id)
-            const tagId = req.body
-            await this.snippetService.removeTag(snippetId, tagId)
-            res.status(204).send()
-        } catch (error) {
-            next(error)
-        }
-    }
-
-
-
 }

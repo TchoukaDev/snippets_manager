@@ -14,13 +14,17 @@ export function SnippetList() {
 
     return (
         <ul className="list-none space-y-4">
-            {categoriesSet.map((category: string | undefined) => category && (<li key={category}>
-                <h2 className="mb-2 ">{category}</h2>
-                {snippets.filter((snippet: Snippet) => snippet.category?.name === category).map((snippet: Snippet) => (<li key={snippet.id}>
-                    <Button variant="ghost" className="text-muted-foreground" onClick={() => setCurrentSnippetId(snippet.id)}>{snippet.title}</Button>
+            {categoriesSet.map((category: string | undefined) => category && (
+                <li key={category}>
+                    <h2 className="mb-2">{category}</h2>
+                    <ul className="list-none">
+                        {snippets.filter((snippet: Snippet) => snippet.category?.name === category).map((snippet: Snippet) => (
+                            <li key={snippet.id}>
+                                <Button variant="ghost" className="text-muted-foreground" onClick={() => setCurrentSnippetId(snippet.id)}>{snippet.title}</Button>
+                            </li>
+                        ))}
+                    </ul>
                 </li>
-                ))}
-            </li>
             ))}
 
         </ul>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useSnippetContext } from '../contexts/SnippetContext';
+import { useSnippetContext } from '../../contexts/SnippetContext';
 import { SnippetCardView } from './SnippetCardView';
 import { SnippetCardEdit } from './SnippetCardEdit';
 

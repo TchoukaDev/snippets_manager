@@ -12,9 +12,13 @@ export type SelectedSnippet = typeof snippets.$inferSelect
 // Type avec jointures (ce que tu renvoies au front)
 export type Snippet = Omit<SelectedSnippet, 'categoryId'> & {
     category: Category | null
+    tags: Tag[]
 }
 
 export type NewSnippet = typeof snippets.$inferInsert
+export type NewSnippetWithTags = NewSnippet & {
+    tagIds: number[]
+}
 
 
 export type SnippetTag = typeof snippetTags.$inferSelect
