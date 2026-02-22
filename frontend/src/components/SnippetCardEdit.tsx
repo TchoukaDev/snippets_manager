@@ -7,6 +7,7 @@ import { Input } from './ui/input';
 import { useState } from 'react';
 import CodeBlockEditor from './CodeBlockEditor';
 import { CategorySelector } from './CategorySelector';
+import { TagsSelector } from './ui/TagsSelector';
 
 const formats: Record<string, string> = {
     'md': 'Markdown',
@@ -23,13 +24,14 @@ export function SnippetCardEdit({ snippet, onCancel, onSaved }: SnippetCardEditP
     const [content, setContent] = useState(snippet.content);
     const [categoryId, setCategoryId] = useState<number | null>(snippet.category?.id ?? null);
     const { mutate: updateSnippet } = useUpdateSnippet();
+    const [selectedTagIds, setSelectedTagIds] = useState<number[]>(snippet.tags.map(tag => tag.id));
 
     const onSave = () => {
         if (!categoryId) {
             throw new Error('Une catégorie est requise');
         }
         updateSnippet(
-            { id: snippet.id, title, content, format: snippet.format, categoryId },
+            { id: snippet.id, title, content, format: snippet.format, categoryId, tagIds: selectedTagIds },
             {
                 onSuccess: () => onSaved(),
                 onError: (error: Error) => console.error(error),
@@ -53,6 +55,10 @@ export function SnippetCardEdit({ snippet, onCancel, onSaved }: SnippetCardEditP
                 <span className="text-muted-foreground text-center">Fichier {formats[snippet.format] ?? snippet.format}</span>
                 {/* Category */}
                 <CategorySelector className='mx-auto' categoryId={categoryId} setCategoryId={setCategoryId} />
+                {/* Tags */}
+                <div className='flex gap-4 justify-center'>
+                    <TagsSelector selectedTagIds={selectedTagIds} onSelectionChange={setSelectedTagIds} />
+                </div>
             </CardHeader>
             <CardContent>
                 {/* Content */}

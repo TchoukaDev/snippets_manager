@@ -7,4 +7,5 @@ export type {
     NewTag,
     SnippetTag,
     NewSnippetTag,
+    NewSnippetWithTags,
 } from '../../backend/src/types';

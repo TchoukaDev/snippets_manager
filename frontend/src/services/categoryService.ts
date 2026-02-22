@@ -1,6 +1,6 @@
 import type { Category, NewCategory } from '@shared/types';
 
-const API_URL = 'http://localhost:3001';
+const API_URL = import.meta.env.VITE_API_URL;
 // Categories
 export const categoryService = {
     getCategories: async (): Promise<Category[]> => {

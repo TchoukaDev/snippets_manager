@@ -8,6 +8,7 @@ import { ManageCategoriesModal } from './components/Modals/ManageCategoriesModal
 import { SnippetProvider, useSnippetContext } from './contexts/SnippetContext';
 import { SearchSnippet } from './components/SearchSnippet';
 import { CategorySelectorWrapper } from './components/CategorySelectorWrapper';
+import { ManageTagsModal } from './components/Modals/ManageTagsModal';
 
 function AppContent() {
   const { currentSnippet } = useSnippetContext();
@@ -36,6 +37,7 @@ function AppContent() {
         <div className="flex gap-4">
           <Button onClick={() => handleOpenModal('addFile')}>+ Ajouter un snippet</Button>
           <Button onClick={() => handleOpenModal('manageCategories')}>Gérer les catégories</Button>
+          <Button onClick={() => handleOpenModal('manageTags')}>Gérer les tags</Button>
           <SearchSnippet />
           <CategorySelectorWrapper />
         </div>
@@ -48,6 +50,7 @@ function AppContent() {
       {/* Modals */}
       <AddFileModal isOpen={isOpen?.addFile ?? false} onClose={() => handleCloseModal('addFile')} />
       <ManageCategoriesModal isOpen={isOpen?.manageCategories ?? false} onClose={() => handleCloseModal('manageCategories')} />
+      <ManageTagsModal isOpen={isOpen?.manageTags ?? false} onClose={() => handleCloseModal('manageTags')} />
     </div>
   );
 }
