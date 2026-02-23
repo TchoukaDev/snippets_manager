@@ -9,10 +9,6 @@ import CodeBlockEditor from '../CodeBlock/CodeBlockEditor';
 import { CategorySelector } from '../CategorySelector/CategorySelector';
 import { TagsSelector } from '../TagsSelector/TagsSelector';
 
-const formats: Record<string, string> = {
-    'md': 'Markdown',
-};
-
 interface SnippetCardEditProps {
     snippet: Snippet;
     onCancel: () => void;
@@ -23,18 +19,20 @@ export function SnippetCardEdit({ snippet, onCancel, onSaved }: SnippetCardEditP
     const [title, setTitle] = useState(snippet.title);
     const [content, setContent] = useState(snippet.content);
     const [categoryId, setCategoryId] = useState<number | null>(snippet.category?.id ?? null);
-    const { mutate: updateSnippet } = useUpdateSnippet();
     const [selectedTagIds, setSelectedTagIds] = useState<number[]>(snippet.tags.map(tag => tag.id));
+    const [error, setError] = useState<string | null>(null);
+    const { mutate: updateSnippet } = useUpdateSnippet();
 
     const onSave = () => {
-        if (!categoryId) {
-            throw new Error('Une catégorie est requise');
-        }
+        if (!title.trim()) { setError('Le titre est requis'); return; }
+        if (!categoryId) { setError('La catégorie est requise'); return; }
+        if (!content.trim()) { setError('Le contenu est requis'); return; }
+        setError(null);
         updateSnippet(
             { id: snippet.id, title, content, format: snippet.format, categoryId, tagIds: selectedTagIds },
             {
                 onSuccess: () => onSaved(),
-                onError: (error: Error) => console.error(error),
+                onError: (e: Error) => setError(e.message),
             }
         );
     };
@@ -52,13 +50,15 @@ export function SnippetCardEdit({ snippet, onCancel, onSaved }: SnippetCardEditP
                     <Input type="text" className='max-w-xs mx-auto' defaultValue={snippet.title} onChange={(e) => setTitle(e.target.value)} />
                 </CardTitle>
                 {/* Format */}
-                <span className="text-muted-foreground text-center">Fichier {formats[snippet.format] ?? snippet.format}</span>
+                <span className="text-muted-foreground text-center">{snippet.format}</span>
                 {/* Category */}
                 <CategorySelector className='mx-auto' categoryId={categoryId} setCategoryId={setCategoryId} />
                 {/* Tags */}
                 <div className='flex gap-4 justify-center'>
                     <TagsSelector selectedTagIds={selectedTagIds} onSelectionChange={setSelectedTagIds} />
                 </div>
+                {/* Error */}
+                {error && <p className='error'>{error}</p>}
             </CardHeader>
             <CardContent>
                 {/* Content */}

@@ -130,7 +130,7 @@
 
 @layer components {
   .error {
-    @apply text-red-500 text-sm text-center;
+    @apply text-red-500 text-sm font-semibold text-center;
   }
 
   .codeBlock h1 {

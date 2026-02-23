@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { SnippetList } from './components/SnippetList';
 import { SnippetCard } from './components/SnippetCard/SnippetCard';
+import { SnippetCardCreate } from './components/SnippetCard/SnippetCardCreate';
 import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card';
 import { Button } from './components/ui/button';
 import { AddFileModal } from './components/Modals/AddFileModal';
@@ -12,8 +13,9 @@ import { ManageTagsModal } from './components/Modals/ManageTagsModal';
 import { TagsSelectorWrapper } from './components/TagsSelector/TagsSelectorWrapper';
 
 function AppContent() {
-  const { currentSnippet } = useSnippetContext();
+  const { currentSnippet, setCurrentSnippetId } = useSnippetContext();
   const [isOpen, setIsOpen] = useState<Record<string, boolean> | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   const handleOpenModal = (modal: string) => {
     setIsOpen({ ...isOpen, [modal]: true });
@@ -36,7 +38,8 @@ function AppContent() {
       {/* Main content */}
       <main className="flex-1 p-6 space-y-6 overflow-y-auto">
         <div className="flex gap-4 flex-wrap">
-          <Button onClick={() => handleOpenModal('addFile')}>+ Ajouter un snippet</Button>
+          <Button onClick={() => handleOpenModal('addFile')}>+ Importer</Button>
+          <Button onClick={() => { setCurrentSnippetId(null); setIsCreating(true); }}>+ Créer</Button>
           <Button onClick={() => handleOpenModal('manageCategories')}>Gérer les catégories</Button>
           <Button onClick={() => handleOpenModal('manageTags')}>Gérer les tags</Button>
           <SearchSnippet />
@@ -44,9 +47,14 @@ function AppContent() {
           <TagsSelectorWrapper />
         </div>
 
-        {currentSnippet ? <SnippetCard key={currentSnippet.id} /> : <Card><CardHeader><CardTitle className='text-center'>Aucun snippet sélectionné</CardTitle></CardHeader>
-          <CardContent><p className='text-center'>Veuillez sélectionner un snippet pour l'afficher ici</p></CardContent>
-        </Card>}
+        {isCreating
+          ? <SnippetCardCreate onCancel={() => setIsCreating(false)} onSaved={() => setIsCreating(false)} />
+          : currentSnippet
+            ? <SnippetCard key={currentSnippet.id} />
+            : <Card><CardHeader><CardTitle className='text-center'>Aucun snippet sélectionné</CardTitle></CardHeader>
+                <CardContent><p className='text-center'>Veuillez sélectionner un snippet pour l'afficher ici</p></CardContent>
+              </Card>
+        }
 
       </main>
       {/* Modals */}
