@@ -79,12 +79,12 @@ export function SnippetForm({ onClose }: { onClose: () => void }) {
                                 <FieldLabel htmlFor="title">Nom du snippet*</FieldLabel>
                                 <Input type="text" id="title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Nom" />
                             </Field>
-                            {/* Category */}
+
                             {/* Category */}
                             <div className='flex gap-4'>
                                 <CategorySelector className='flex-1' categoryId={categoryId} setCategoryId={(categoryId) => setCategoryId(Number(categoryId) || null)} />
                                 <NewCategoryOrTagButton handleOpenModal={() => setIsCategoryModalOpen(true)} title='Ajouter une catégorie' ariaLabel='Ajouter une catégorie' />
-                                <NewCategoryOrTagButton handleOpenModal={() => setIsCategoryModalOpen(true)} title='Ajouter une catégorie' ariaLabel='Ajouter une catégorie' />
+
                             </div>
                             {/* Tags */}
                             <div className='flex gap-4'>
@@ -95,15 +95,7 @@ export function SnippetForm({ onClose }: { onClose: () => void }) {
 
                                 <NewCategoryOrTagButton handleOpenModal={() => setIsTagModalOpen(true)} title='Ajouter un tag' ariaLabel='Ajouter un tag' variant="secondary" />  </div>
 
-                            {/* Error */}
-                            {/* Tags */}
-                            <div className='flex gap-4'>
-                                <TagsSelector
-                                    selectedTagIds={selectedTagIds}
-                                    onSelectionChange={setSelectedTagIds}
-                                />
 
-                                <NewCategoryOrTagButton handleOpenModal={() => setIsTagModalOpen(true)} title='Ajouter un tag' ariaLabel='Ajouter un tag' variant="secondary" />  </div>
 
                             {/* Error */}
                             {error && (
@@ -131,10 +123,7 @@ export function SnippetForm({ onClose }: { onClose: () => void }) {
                 isOpen={isTagModalOpen}
                 onClose={() => setIsTagModalOpen(false)}
             />
-            <NewTagModal
-                isOpen={isTagModalOpen}
-                onClose={() => setIsTagModalOpen(false)}
-            />
+
         </>
     );
 }
