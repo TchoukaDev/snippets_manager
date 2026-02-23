@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import { Settings } from 'lucide-react';
 import { SnippetList } from './components/SnippetList';
 import { SnippetCard } from './components/SnippetCard/SnippetCard';
 import { SnippetCardCreate } from './components/SnippetCard/SnippetCardCreate';
 import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card';
 import { Button } from './components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './components/ui/dropdown-menu';
+import { SettingsWrapper } from './components/SettingsWrapper';
 import { AddFileModal } from './components/Modals/AddFileModal';
 import { ManageCategoriesModal } from './components/Modals/ManageCategoriesModal';
 import { SnippetProvider, useSnippetContext } from './contexts/SnippetContext';
@@ -45,21 +44,10 @@ function AppContent() {
           <SearchSnippet />
           <CategorySelectorWrapper />
           <TagsSelectorWrapper />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon" className="ml-auto">
-                <Settings className="size-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => handleOpenModal('manageCategories')}>
-                Gérer les catégories
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleOpenModal('manageTags')}>
-                Gérer les tags
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <SettingsWrapper
+            onManageCategories={() => handleOpenModal('manageCategories')}
+            onManageTags={() => handleOpenModal('manageTags')}
+          />
         </div>
 
         {isCreating

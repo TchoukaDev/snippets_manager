@@ -34,12 +34,12 @@ npm run db:push:prod
 Variables d'environnement dans `.env.local` (local) ou `.env.production` (prod) :
 
 ```
-PORT=3001
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=root
-DB_NAME=snippets
-DB_PORT=3306
+PORT=<port>
+DB_HOST=<host>
+DB_USER=<utilisateur>
+DB_PASSWORD=<mot_de_passe>
+DB_NAME=<nom_de_la_base>
+DB_PORT=<port_mysql>
 ```
 
 ## API
