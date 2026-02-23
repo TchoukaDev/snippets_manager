@@ -1,28 +1,15 @@
 // types/index.ts
-import { snippets, categories, tags, snippetTags } from '../lib/schema'
-
-// Types générés par Drizzle depuis ton schema
-export type Category = typeof categories.$inferSelect
-export type NewCategory = typeof categories.$inferInsert
-
-export type Tag = typeof tags.$inferSelect
-export type NewTag = typeof tags.$inferInsert
-
-export type SelectedSnippet = typeof snippets.$inferSelect
-// Type avec jointures (ce que tu renvoies au front)
-export type Snippet = Omit<SelectedSnippet, 'categoryId'> & {
-    category: Category | null
-    tags: Tag[]
-}
-
-export type NewSnippet = typeof snippets.$inferInsert
-export type NewSnippetWithTags = NewSnippet & {
-    tagIds: number[]
-}
-
-
-export type SnippetTag = typeof snippetTags.$inferSelect
-export type NewSnippetTag = typeof snippetTags.$inferInsert
+export type {
+    Category,
+    NewCategory,
+    Tag,
+    NewTag,
+    Snippet,
+    NewSnippet,
+    NewSnippetWithTags,
+    SnippetTag,
+    NewSnippetTag,
+} from '../../../shared/types'
 
 // Résultats des opérations DB
 export interface InsertResult {

@@ -2,12 +2,7 @@ import ReactMarkdown from 'react-markdown';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 // Dark
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { dracula } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
-// Light
-import { vs } from 'react-syntax-highlighter/dist/esm/styles/prism'
-import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 interface CodeBlockProps {
     content: string;
