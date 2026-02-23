@@ -16,7 +16,11 @@ export class SnippetService {
             category: snippet.category ? {
                 ...snippet.category,
                 name: normalizeToFrontend(snippet.category.name)
-            } : null
+            } : null,
+            tags: snippet.tags.map(tag => ({
+                ...tag,
+                name: normalizeToFrontend(tag.name)
+            }))
         }))
     }
 
@@ -32,7 +36,11 @@ export class SnippetService {
             category: snippet.category ? {
                 ...snippet.category,
                 name: normalizeToFrontend(snippet.category.name)
-            } : null
+            } : null,
+            tags: snippet.tags.map(tag => ({
+                ...tag,
+                name: normalizeToFrontend(tag.name)
+            }))
         }
     }
 

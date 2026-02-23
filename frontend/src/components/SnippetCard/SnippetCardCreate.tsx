@@ -25,9 +25,27 @@ export function SnippetCardCreate({ onCancel, onSaved }: SnippetCardCreateProps)
     const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
     const { mutate: createSnippet } = useCreateSnippet();
     const { setCurrentSnippetId } = useSnippetContext();
+    const [error, setError] = useState<string | null>(null);
 
     const onSave = () => {
-        if (!categoryId) return;
+        if (!title.trim()) {
+            setError("Un titre est requis");
+            return;
+        }
+        if (!categoryId) {
+            setError("Une catégorie est requise");
+            return;
+        }
+
+        if (!format.trim()) {
+            setError("Le format est requis");
+            return;
+        }
+        if (!content.trim()) {
+            setError("Le contenu est requis");
+            return;
+        }
+
 
         createSnippet(
             { title, content, format, categoryId, tagIds: selectedTagIds },
@@ -36,7 +54,7 @@ export function SnippetCardCreate({ onCancel, onSaved }: SnippetCardCreateProps)
                     setCurrentSnippetId(snippet.id);
                     onSaved();
                 },
-                onError: (error) => console.error(error),
+                onError: (error) => setError(error.message),
             }
         );
     };
@@ -76,6 +94,7 @@ export function SnippetCardCreate({ onCancel, onSaved }: SnippetCardCreateProps)
                 <div className='flex gap-4 justify-center'>
                     <TagsSelector selectedTagIds={selectedTagIds} onSelectionChange={setSelectedTagIds} />
                 </div>
+                {error && <p className='text-red-500'>{error}</p>}
             </CardHeader>
             <CardContent>
                 <CodeBlockEditor content={content} format={format} onChange={setContent} />
