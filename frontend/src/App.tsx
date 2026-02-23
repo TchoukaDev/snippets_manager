@@ -39,6 +39,7 @@ function AppContent() {
           <Button onClick={() => handleOpenModal('addFile')}>+ Ajouter un snippet</Button>
           <Button onClick={() => handleOpenModal('manageCategories')}>Gérer les catégories</Button>
           <Button onClick={() => handleOpenModal('manageTags')}>Gérer les tags</Button>
+          <Button onClick={() => handleOpenModal('manageTags')}>Gérer les tags</Button>
           <SearchSnippet />
           <CategorySelectorWrapper />
           <TagsSelectorWrapper />
@@ -52,6 +53,7 @@ function AppContent() {
       {/* Modals */}
       <AddFileModal isOpen={isOpen?.addFile ?? false} onClose={() => handleCloseModal('addFile')} />
       <ManageCategoriesModal isOpen={isOpen?.manageCategories ?? false} onClose={() => handleCloseModal('manageCategories')} />
+      <ManageTagsModal isOpen={isOpen?.manageTags ?? false} onClose={() => handleCloseModal('manageTags')} />
       <ManageTagsModal isOpen={isOpen?.manageTags ?? false} onClose={() => handleCloseModal('manageTags')} />
     </div>
   );
