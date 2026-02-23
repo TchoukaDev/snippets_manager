@@ -25,14 +25,12 @@ export function SnippetCardEdit({ snippet, onCancel, onSaved }: SnippetCardEditP
     const [categoryId, setCategoryId] = useState<number | null>(snippet.category?.id ?? null);
     const { mutate: updateSnippet } = useUpdateSnippet();
     const [selectedTagIds, setSelectedTagIds] = useState<number[]>(snippet.tags.map(tag => tag.id));
-    const [selectedTagIds, setSelectedTagIds] = useState<number[]>(snippet.tags.map(tag => tag.id));
 
     const onSave = () => {
         if (!categoryId) {
             throw new Error('Une catégorie est requise');
         }
         updateSnippet(
-            { id: snippet.id, title, content, format: snippet.format, categoryId, tagIds: selectedTagIds },
             { id: snippet.id, title, content, format: snippet.format, categoryId, tagIds: selectedTagIds },
             {
                 onSuccess: () => onSaved(),
@@ -57,10 +55,6 @@ export function SnippetCardEdit({ snippet, onCancel, onSaved }: SnippetCardEditP
                 <span className="text-muted-foreground text-center">Fichier {formats[snippet.format] ?? snippet.format}</span>
                 {/* Category */}
                 <CategorySelector className='mx-auto' categoryId={categoryId} setCategoryId={setCategoryId} />
-                {/* Tags */}
-                <div className='flex gap-4 justify-center'>
-                    <TagsSelector selectedTagIds={selectedTagIds} onSelectionChange={setSelectedTagIds} />
-                </div>
                 {/* Tags */}
                 <div className='flex gap-4 justify-center'>
                     <TagsSelector selectedTagIds={selectedTagIds} onSelectionChange={setSelectedTagIds} />
