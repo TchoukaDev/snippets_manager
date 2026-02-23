@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { Settings } from 'lucide-react';
 import { SnippetList } from './components/SnippetList';
 import { SnippetCard } from './components/SnippetCard/SnippetCard';
 import { SnippetCardCreate } from './components/SnippetCard/SnippetCardCreate';
 import { Card, CardContent, CardHeader, CardTitle } from './components/ui/card';
 import { Button } from './components/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './components/ui/dropdown-menu';
 import { AddFileModal } from './components/Modals/AddFileModal';
 import { ManageCategoriesModal } from './components/Modals/ManageCategoriesModal';
 import { SnippetProvider, useSnippetContext } from './contexts/SnippetContext';
@@ -37,14 +39,27 @@ function AppContent() {
       </aside>
       {/* Main content */}
       <main className="flex-1 p-6 space-y-6 overflow-y-auto">
-        <div className="flex gap-4 flex-wrap">
+        <div className="flex gap-4 flex-wrap items-center">
           <Button onClick={() => handleOpenModal('addFile')}>+ Importer</Button>
           <Button onClick={() => { setCurrentSnippetId(null); setIsCreating(true); }}>+ Créer</Button>
-          <Button onClick={() => handleOpenModal('manageCategories')}>Gérer les catégories</Button>
-          <Button onClick={() => handleOpenModal('manageTags')}>Gérer les tags</Button>
           <SearchSnippet />
           <CategorySelectorWrapper />
           <TagsSelectorWrapper />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon" className="ml-auto">
+                <Settings className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => handleOpenModal('manageCategories')}>
+                Gérer les catégories
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => handleOpenModal('manageTags')}>
+                Gérer les tags
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {isCreating
