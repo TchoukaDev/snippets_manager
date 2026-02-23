@@ -24,6 +24,7 @@ export type Snippet = {
     tags: Tag[]
 }
 export type NewSnippet = {
+    id?: number | null | undefined
     title: string
     format: string
     content: string
